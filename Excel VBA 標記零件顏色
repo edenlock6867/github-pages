@@ -1,0 +1,172 @@
+Sub 標記零件顏色()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim cell As Range
+    Dim startCell As Range
+    Dim keyword As String
+    Dim colorCode As Long
+
+    ' 設定目前的工作表
+    Set ws = ActiveSheet
+    
+' 找到 G 欄的最後一列
+lastRow = ws.Cells(ws.Rows.Count, "G").End(xlUp).row
+
+' 迴圈檢查 G 欄每個儲存格
+For Each cell In ws.Range("G1:G" & lastRow)
+    keyword = LCase(cell.Value) ' 更新每個儲存格的內容為小寫
+
+    ' 檢查是否包含指定的部分關鍵字
+    If InStr(keyword, "o-ring") > 0 Or _
+       InStr(keyword, "o環") > 0 Or _
+       InStr(keyword, "束帶") > 0 Or _
+       InStr(keyword, "tube") > 0 Or _
+       InStr(keyword, "管") > 0 Or _
+       InStr(keyword, "id") > 0 Then
+        colorCode = RGB(255, 255, 0) ' 黃色
+    ElseIf InStr(keyword, "端子") > 0 Or _
+       InStr(keyword, "電線") > 0 Or _
+       InStr(keyword, "電纜") > 0 Then
+        colorCode = RGB(204, 192, 218) ' 紫色 輔色4 較淺60%
+    ElseIf InStr(keyword, "紙箱") > 0 Or _
+       InStr(keyword, "EPE") > 0 Then
+        colorCode = RGB(247, 150, 70) ' 橙色 輔色6
+    Else
+        colorCode = -1 ' 沒有匹配的關鍵字
+    End If
+
+    If colorCode <> -1 Then
+        ' 找到最接近 A 欄的非中文開頭儲存格
+        Set startCell = FindNonChineseCell(cell.row, ws)
+
+        If Not startCell Is Nothing Then
+            ' 填滿該列的範圍 A:G
+            ws.Range(startCell, ws.Cells(cell.row, "G")).Interior.Color = colorCode
+        End If
+    End If
+Next cell
+
+    ' 找到 J 欄的最後一列
+    lastRow = ws.Cells(ws.Rows.Count, "J").End(xlUp).row
+
+    ' 迴圈檢查 J 欄每個儲存格
+    For Each cell In ws.Range("J1:J" & lastRow)
+        keyword = LCase(cell.Value) ' 將內容轉為小寫
+        
+
+        If InStr(keyword, "外包") > 0 Then
+            colorCode = RGB(247, 150, 70) ' 橙色 輔色6
+        ElseIf InStr(keyword, "自製") > 0 Then
+            colorCode = RGB(218, 238, 243) ' 青色 輔色5 較淺80%
+        ElseIf InStr(keyword, "電壓") > 0 Or _
+               InStr(keyword, "電流") > 0 Or _
+               InStr(keyword, "驅動") > 0 Or _
+               InStr(keyword, "dc") > 0 Or _
+               InStr(keyword, "功率") > 0 Or _
+               InStr(keyword, "端子") > 0 Or _
+               InStr(keyword, "瓦數") > 0 Then
+            colorCode = RGB(204, 192, 218) ' 紫色 輔色4 較淺60%
+        ElseIf InStr(keyword, "螺絲") > 0 Or _
+               InStr(keyword, "螺帽") > 0 Or _
+               InStr(keyword, "螺栓") > 0 Then
+            colorCode = RGB(255, 255, 0) ' 黃色
+
+        Else
+            colorCode = -1 ' 沒有匹配的關鍵字
+        End If
+
+        If colorCode <> -1 Then
+            ' 找到最接近 A 欄的非中文開頭儲存格
+            Set startCell = FindNonChineseCell(cell.row, ws)
+
+
+            If Not startCell Is Nothing Then
+                ' 填滿該列的範圍 A:G
+                ws.Range(startCell, ws.Cells(cell.row, "G")).Interior.Color = colorCode
+            End If
+        End If
+    Next cell
+        ' 找到 L 欄的最後一列
+    lastRow = ws.Cells(ws.Rows.Count, "L").End(xlUp).row
+
+    ' 迴圈檢查 L 欄每個儲存格
+    For Each cell In ws.Range("L1:L" & lastRow)
+        keyword = LCase(cell.Value) ' 將內容轉為小寫
+
+        If InStr(keyword, "瑟鎂科技") > 0 Or _
+           InStr(keyword, "自行") > 0 Then
+            colorCode = RGB(218, 238, 243) ' 青色 輔色5 較淺80%
+        ElseIf InStr(keyword, "客製") > 0 Then
+            colorCode = RGB(247, 150, 70) ' 橙色 輔色6
+        Else
+            colorCode = -1 ' 沒有匹配的關鍵字
+        End If
+
+        If colorCode <> -1 Then
+            ' 找到最接近 A 欄的非中文開頭儲存格
+            Set startCell = FindNonChineseCell(cell.row, ws)
+
+            If Not startCell Is Nothing Then
+                ' 填滿該列的範圍 A:G
+                ws.Range(startCell, ws.Cells(cell.row, "G")).Interior.Color = colorCode
+            End If
+        End If
+    Next cell
+    
+            ' 找到 G 欄的最後一列
+    lastRow = ws.Cells(ws.Rows.Count, "G").End(xlUp).row
+
+
+
+    ' 搜尋整個工作表的 N/A 並填上紅色
+    For Each cell In ws.UsedRange
+        If LCase(cell.Value) = "n/a" Then
+            cell.Interior.Color = RGB(255, 0, 0) ' 紅色
+        End If
+    Next cell
+
+    ' 搜尋 J 欄和 K 欄的 N/A 並填上橄欖綠
+    For Each cell In ws.Range("J1:K" & lastRow)
+        If LCase(cell.Value) = "n/a" Then
+            cell.Interior.Color = RGB(235, 241, 222) ' 橄欖綠 輔色3 較淺30%
+        End If
+    Next cell
+' 搜尋 L 欄的 瑟鎂科技 並填上青色
+For Each cell In ws.Range("L1:L" & lastRow)
+    If InStr(LCase(cell.Value), "瑟鎂科技") > 0 Then
+        cell.Interior.Color = RGB(218, 238, 243) ' 青色 輔色5 較淺80%
+    End If
+Next cell
+
+    ' 偵測有刪除線的儲存格，填滿整列 A 到 P
+    For Each cell In ws.UsedRange
+        If cell.Font.Strikethrough Then
+            ws.Range(ws.Cells(cell.row, "A"), ws.Cells(cell.row, "P")).Interior.Color = RGB(128, 128, 128) ' 黑色 文字1 較淺50%
+        End If
+    Next cell
+
+
+    MsgBox "完成顏色填充！"
+End Sub
+
+Function FindNonChineseCell(row As Long, ws As Worksheet) As Range
+    Dim cell As Range
+    Dim re As Object
+    Set re = CreateObject("VBScript.RegExp")
+    re.Pattern = "^[^\u4e00-\u9fa5]" ' 非中文字符開頭
+    re.IgnoreCase = True
+
+    ' 從 A 欄開始找
+    For Each cell In ws.Range("A" & row & ":G" & row)
+        ' 排除空白、合併儲存格或含空字串的儲存格
+        If Not IsEmpty(cell.Value) And Trim(cell.Value) <> "" And Not cell.MergeCells Then
+            ' 符合非中文字符開頭
+            If re.Test(cell.Value) Then
+                Set FindNonChineseCell = cell
+                Exit Function
+            End If
+        End If
+    Next cell
+
+    Set FindNonChineseCell = Nothing ' 找不到時回傳 Nothing
+End Function
